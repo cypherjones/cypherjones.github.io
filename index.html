@@ -1,178 +1,454 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AJ Jones Selected Builds</title>
+<meta name="description" content="Four systems AJ Jones designed and built with agentic coding: an operations analytics platform, an AI trading system, a personal finance copilot, and a work context server.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<style>
+/* Layout: operations-dashboard shell. Header bar, mint gradient hero, sticky sidebar index, panels on a light canvas. */
+:root {
+  --bg: #F5F6F8;
+  --panel: #FFFFFF;
+  --border: #E1E5EA;
+  --text: #1A1F2A;
+  --text-2: #4A5568;
+  --text-muted: #7B8A8B;
+  --brand-deep: #0F6B5C;
+  --brand-teal: #26A89F;
+  --brand-mint: #A8E0D4;
+  --brand-line: #C7E9DF;
+  --accent: #1F8DD6;
+  --warn: #B8651D;
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
+  --mono: "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body { margin: 0; font-family: var(--font); color: var(--text); background: var(--bg); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: var(--brand-deep); font-weight: 600; text-decoration: none; }
+a:hover { text-decoration: underline; }
+:where(a, button):focus-visible { outline: 2px solid var(--brand-teal); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
 
-    <title>blue</title>
+/* Header bar */
+.top { position: sticky; top: 0; z-index: 10; background: var(--panel); border-bottom: 1px solid var(--border); }
+.top-in { max-width: 1240px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark { width: 36px; height: 36px; border-radius: 50%; flex: none; background: radial-gradient(circle at 65% 35%, var(--brand-mint) 0%, var(--brand-teal) 45%, var(--brand-deep) 80%, #0A4F43 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; letter-spacing: 0; }
+.logo-wordmark { font-weight: 800; letter-spacing: 0.5px; line-height: 1.15; }
+.logo-wordmark .name { font-size: 13px; color: var(--text); }
+.logo-wordmark .tag { font-size: 10px; color: var(--text-2); font-weight: 500; letter-spacing: 0.3px; }
+.top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pill { padding: 5px 11px; background: linear-gradient(95deg, rgba(15,107,92,0.08) 0%, rgba(38,168,159,0.08) 100%); border: 1px solid var(--brand-line); border-radius: 12px; font-size: 11px; font-weight: 700; color: var(--brand-deep); letter-spacing: 0.3px; white-space: nowrap; }
+.pill.hold { background: #FBF1E6; border-color: #EBD3B8; color: var(--warn); }
+.btn { display: inline-block; padding: 10px 18px; background: linear-gradient(95deg, var(--brand-deep) 0%, var(--brand-teal) 100%); color: #fff; border-radius: 4px; font-weight: 700; font-size: 12px; letter-spacing: 0.8px; text-transform: uppercase; box-shadow: 0 2px 6px rgba(15,107,92,0.25); white-space: nowrap; }
+.btn:hover { filter: brightness(1.08); text-decoration: none; }
 
-    <!-- Bootstrap core CSS -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+/* Hero */
+.hero { background: linear-gradient(110deg, var(--brand-mint) 0%, #D8F0EA 35%, #F5F9F7 70%, #FFFFFF 100%); position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+.hero::after { content: ""; position: absolute; right: -20%; bottom: -30%; width: 70%; height: 90%; background-image: repeating-radial-gradient(circle at 100% 100%, transparent 0 18px, var(--brand-line) 18px 19px); opacity: 0.45; pointer-events: none; }
+.hero-in { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 40px; display: grid; gap: 18px; }
+.eyebrow { font-size: 11px; letter-spacing: 2px; color: var(--text); font-weight: 700; text-transform: uppercase; }
+.hero h1 { font-size: clamp(40px, 7vw, 68px); line-height: 0.98; font-weight: 800; letter-spacing: -2px; }
+.hero .sub { font-size: 18px; line-height: 1.5; color: var(--text-2); max-width: 640px; font-weight: 500; }
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="/assets/js/ie-emulation-modes-warning.js"></script>
+/* Shell */
+.shell { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: start; }
+.side { position: sticky; top: 76px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px 0; }
+.side-section { padding: 8px 16px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+.side a { display: block; padding: 8px 16px; font-size: 13px; color: var(--text); font-weight: 500; border-left: 3px solid transparent; }
+.side a:hover { background: var(--bg); text-decoration: none; border-left-color: var(--brand-line); }
+.side a.lead { background: linear-gradient(90deg, rgba(38,168,159,0.10) 0%, transparent 100%); border-left-color: var(--brand-teal); font-weight: 600; }
+.side .gap { height: 10px; }
+main { display: grid; gap: 24px; min-width: 0; }
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
+/* Panels */
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 1px 3px rgba(15,31,42,0.06); overflow: hidden; min-width: 0; }
+.panel-head { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel-head .kicker { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+.panel-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-top: 2px; }
+.panel-body { padding: 20px 24px 24px; display: grid; gap: 18px; min-width: 0; }
+.thesis { font-size: 17px; color: var(--text); max-width: 68ch; font-weight: 500; }
+.panel-body p { max-width: 70ch; color: var(--text-2); }
+.panel-body h3 { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--brand-deep); padding-top: 4px; }
+ul.list { margin: 0; padding-left: 1.15em; display: grid; gap: 6px; color: var(--text-2); max-width: 70ch; }
+ul.list li::marker { color: var(--brand-teal); }
+ul.list b, p b { color: var(--text); }
+ol.list { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; color: var(--text-2); max-width: 70ch; }
+ol.list li::marker { color: var(--brand-deep); font-weight: 700; }
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+/* Spec grid */
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.spec div { background: var(--bg); padding: 12px 14px; min-width: 0; }
+.spec dt { font-size: 10px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-2); font-weight: 700; margin-bottom: 3px; }
+.spec dd { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.4; }
 
-    <!-- Custom styles for this template -->
-    <link href="/css/carousel.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-    <style>
-    .dropdown-submenu{position:relative;}
-    .dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
-    .dropdown-submenu:hover>.dropdown-menu{display:block;}
-    .dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
-    </style>
-  </head>
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--panel); }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { background: var(--bg); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; color: var(--text-2); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; }
+.note { font-size: 12px; color: var(--text-muted); }
 
+/* Ledger */
+.ledger td:first-child a { color: var(--text); }
+.ledger td:last-child { text-align: right; }
+
+/* KPI tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; background: var(--panel); box-shadow: 0 1px 2px rgba(15,31,42,0.04); display: grid; gap: 4px; align-content: start; }
+.tile .k { font-size: 10px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-2); font-weight: 700; }
+.tile .v { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: var(--brand-deep); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.tile .d { font-size: 13px; color: var(--text-2); line-height: 1.45; }
+
+/* Flow */
+.flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+.stage { flex: 1 1 150px; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; background: var(--bg); }
+.stage b { display: block; font-size: 13px; }
+.stage span { display: block; font-size: 12px; color: var(--text-2); line-height: 1.45; margin-top: 2px; }
+.stage.you { background: linear-gradient(135deg, rgba(38,168,159,0.12) 0%, rgba(168,224,212,0.25) 100%); border-color: var(--brand-teal); }
+.arrow { align-self: center; color: var(--brand-teal); font-weight: 700; }
+
+/* Findings */
+.findings { display: grid; border-top: 1px solid var(--border); }
+.finding { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.finding .tag { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: var(--brand-deep); padding-top: 3px; }
+.finding p { color: var(--text-2); }
+
+/* Principles */
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.principles div { border: 1px solid var(--border); border-top: 3px solid var(--brand-teal); border-radius: 8px; padding: 14px 16px; background: var(--panel); }
+.principles b { display: block; font-size: 14px; margin-bottom: 4px; }
+.principles p { font-size: 14px; color: var(--text-2); }
+
+footer { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 0 40px; font-size: 12px; color: var(--text-muted); }
+
+@media (max-width: 880px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; display: flex; overflow-x: auto; padding: 0; }
+  .side-section, .side .gap { display: none; }
+  .side a { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; padding: 12px 14px; }
+  .side a.lead { border-bottom-color: var(--brand-teal); }
+}
+@media (max-width: 560px) {
+  .finding { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .arrow { display: none; }
+  .stage { flex-basis: 100%; }
+  .panel-head, .panel-body { padding-inline: 16px; }
+  .top-right .pill { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
 <body>
-  <header class="masthead">
-    <div class="container">
-      <div class="nav-header">
-        <div class="col-xs-6">
-          <h1>
-          <a href="https://culnat.com">
-            <img src="/assets/img/Culnat_Logo_No_Tag_RGB_MASTER.png" class="img-responsive">
-          </a>
-          </h1>
-        </div>
-        <div class="col-xs-6 text-right">
-          <h1>
-            <i class="fa fa-facebook-square"></i>
-            <i class="fa fa-twitter-square"></i>
-            <i class="fa fa-youtube"></i>
-          </h1>
-        </div>
-        </div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo">
+      <div class="logo-mark" aria-hidden="true">AJ</div>
+      <div class="logo-wordmark">
+        <div class="name">AJ JONES</div>
+        <div class="tag">Product leader, AI &amp; data platforms</div>
       </div>
     </div>
-  </header>
-  <div class="navbar navbar-inverse" style="border-radius: 0 !important;" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Menu</a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Products <span></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li class="dropdown-submenu">
-                <a tabindex="-1" href="#">Roughend Plumbing</a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="-1" href="#">Culwell Flange</a></li>
-                  <li><a href="#">Overview</a></li>
-                  <li><a href="#">Submittal Sheets</a></li>
-                  <li><a href="#">Technical Data Sheets</a></li>
-                  <li><a href="#">Installation Instructions</a></li>
-                </ul>
-              </li>
-              <li><a href="#">American Wetroom</a></li>
-              <li><a href="#">Bathrooms</a></li>
-            </ul>
-          </li>
-          <li><a href="/docs/about.html">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li class="dropdown-header">Nav header</li>
-              <li><a href="#">Separated link</a></li>
-              <li><a href="#">One more separated link</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+    <div class="top-right">
+      <span class="pill">GREATER HOUSTON</span>
+      <a class="btn" href="https://www.linkedin.com/in/ajjonez/">LinkedIn</a>
     </div>
   </div>
+</header>
 
+<section class="hero">
+  <div class="hero-in">
+    <div class="eyebrow">Selected builds</div>
+    <h1>Four systems<br>I built with AI.</h1>
+    <p class="sub">I run enterprise software implementations for a living, and before that I owned capacity, SRE, and ML products at Disney Streaming and Jungle Scout. On my own time I build. I set the direction and the bar, coding agents write most of the code, and I review what they build before I trust it.</p>
+  </div>
+</section>
 
-<!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/assets/js/docs.min.js"></script>
-            <!-- JavaScript jQuery code from Bootply.com editor  -->
-        
-        <script type='text/javascript'>
-        
-        $(document).ready(function() {
-        
-            $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
-    // Avoid following the href location when clicking
-    event.preventDefault(); 
-    // Avoid having the menu to close when clicking
-    event.stopPropagation(); 
-    // If a menu is already open we close it
-    //$('ul.dropdown-menu [data-toggle=dropdown]').parent().removeClass('open');
-    // opening the one you clicked on
-    $(this).parent().addClass('open');
+<div class="shell">
+  <nav class="side" aria-label="Builds">
+    <div class="side-section">Builds</div>
+    <a class="lead" href="#analytics">Operations analytics</a>
+    <a href="#wilson">Wilson</a>
+    <a href="#bud">Bud</a>
+    <a href="#context">Work context server</a>
+    <div class="gap"></div>
+    <div class="side-section">Method</div>
+    <a href="#method">How I work with AI</a>
+    <div class="gap"></div>
+    <div class="side-section">Contact</div>
+    <a href="https://www.linkedin.com/in/ajjonez/">LinkedIn</a>
+    <a href="mailto:ajjonez@icloud.com">Email</a>
+  </nav>
 
-    var menu = $(this).parent().find("ul");
-    var menupos = menu.offset();
-  
-    if ((menupos.left + menu.width()) + 30 > $(window).width()) {
-        var newpos = - menu.width();      
-    } else {
-        var newpos = $(this).parent().width();
-    }
-    menu.css({ left:newpos });
+  <main>
+    <section class="panel">
+      <div class="panel-head">
+        <div><div class="kicker">Overview</div><h2>At a glance</h2></div>
+      </div>
+      <div class="panel-body">
+        <p>For each one: what it does, how I used AI to build and run it, the calls I made that the AI would not have, and the practices I kept.</p>
+        <div class="table-wrap">
+          <table class="ledger">
+            <thead><tr><th>Build</th><th>What it is</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><a href="#analytics">Operations analytics platform</a></td><td>Multi-tenant data platform, telematics through to the financials</td><td><span class="pill">SHIPPED</span></td></tr>
+              <tr><td><a href="#wilson">Wilson</a></td><td>Strategy agents feeding a risk-limited allocator</td><td><span class="pill hold">ON HOLD</span></td></tr>
+              <tr><td><a href="#bud">Bud</a></td><td>Personal finance copilot</td><td><span class="pill">IN USE</span></td></tr>
+              <tr><td><a href="#context">Work context server</a></td><td>MCP server that gives AI assistants my working context</td><td><span class="pill">DAILY USE</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-});
-        
-        });
-        
-        </script>
-        
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-          ga('create', 'UA-40413119-1', 'bootply.com');
-          ga('send', 'pageview');
-        </script>
-        <!-- Quantcast Tag -->
-        <script type="text/javascript">
-        var _qevents = _qevents || [];
-        
-        (function() {
-        var elem = document.createElement('script');
-        elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-        elem.async = true;
-        elem.type = "text/javascript";
-        var scpt = document.getElementsByTagName('script')[0];
-        scpt.parentNode.insertBefore(elem, scpt);
-        })();
-        
-        _qevents.push({
-        qacct:"p-0cXb7ATGU9nz5"
-        });
-        </script>
-  </body>
-  </html>
+    <section class="panel" id="analytics">
+      <div class="panel-head">
+        <div><div class="kicker">Data platform</div><h2>Operations analytics platform</h2></div>
+        <span class="pill">SHIPPED</span>
+      </div>
+      <div class="panel-body">
+        <p class="thesis">An analytics platform that pulls a waste hauler's operational data into one place, telematics through to the financials, and turns it into the metrics they run the business on.</p>
+        <dl class="spec">
+          <div><dt>Period</dt><dd>March to October 2026</dd></div>
+          <div><dt>My role</dt><dd>Product owner, spec author, builder</dd></div>
+          <div><dt>Built with</dt><dd>Agentic coding: frontier, mid-tier, and small models in parallel lanes</dd></div>
+          <div><dt>Data sources</dt><dd>Telematics, fleet maintenance, operations, financials</dd></div>
+        </dl>
+
+        <h3>Scale</h3>
+        <div class="tiles">
+          <div class="tile"><span class="k">Tickets shipped</span><span class="v">460+</span><span class="d">Since May 2026, about 90 a month, across 22 projects</span></div>
+          <div class="tile"><span class="k">Commits</span><span class="v">840+</span><span class="d">About 75% co-authored by coding agents</span></div>
+          <div class="tile"><span class="k">Merged pull requests</span><span class="v">380+</span><span class="d">Each through CI before merge</span></div>
+          <div class="tile"><span class="k">Lines of code</span><span class="v">100K+</span><span class="d">Python, TypeScript, and SQL</span></div>
+          <div class="tile"><span class="k">Test files</span><span class="v">160+</span><span class="d">Unit, type, and end-to-end browser tests</span></div>
+          <div class="tile"><span class="k">Customer tenants</span><span class="v">3</span><span class="d">Each isolated from the others</span></div>
+        </div>
+        <p class="note">Counts from the repository and ticket tracker, October 2026.</p>
+
+        <h3>What it does</h3>
+        <p>Haulers keep their data in separate systems: telematics in one, maintenance in another, billing and the general ledger somewhere else. The platform connects those sources, runs them through one pipeline, and puts the operating metrics an owner needs in one dashboard.</p>
+
+        <h3>How it's engineered</h3>
+        <ul class="list">
+          <li>Containerized services on a cloud server, with health checks and automated deploys that apply database changes before the new version starts.</li>
+          <li>Customer data kept in separate lanes by the database itself, with staff, client, and audited support access.</li>
+          <li>CI on every pull request: lint, type checks, unit tests, end-to-end browser tests, and a gate that blocks a database change until its production rollout is confirmed.</li>
+          <li>Secrets supplied at runtime, and production writes allowed only from the production server, so a rule people had to remember became one the system enforces.</li>
+        </ul>
+
+        <h3>Quality gates</h3>
+        <p>For a data business, trust in the numbers is the product. Any bug class found twice becomes an automated gate, and gates cost nothing to run.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Gate</th><th>What it stops</th></tr></thead>
+            <tbody>
+              <tr><td>Correctness gate</td><td>Runs inside every refresh and blocks a bad or stale run before it reaches a client, with a named alert.</td></tr>
+              <tr><td>Golden-value gates</td><td>Fourteen gates that lock audited figures to known-good values so corrected metrics cannot drift back.</td></tr>
+              <tr><td>Column gate</td><td>Fails CI when a dashboard tile reads a column that does not exist or that nothing fills.</td></tr>
+              <tr><td>Migration gate</td><td>Blocks a database change from merging until its production apply is confirmed.</td></tr>
+              <tr><td>Prune guard</td><td>Refuses a load that would quietly shrink a table.</td></tr>
+              <tr><td>Sanity gate</td><td>Shows "pending" on the dashboard instead of a figure outside a sane range.</td></tr>
+              <tr><td>Staleness check</td><td>Pages when a source file is overdue.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Calls I made</h3>
+        <ul class="list">
+          <li>Wrote the product spec and the metric definitions the pipeline is built to deliver.</li>
+          <li>Kept a standing set of rule files that tell the coding agents how to work in this codebase, so every session starts from the same conventions.</li>
+          <li>Re-planned the agent work by risk tier when the first sprint's cost told me the staffing model was wrong.</li>
+        </ul>
+
+        <h3>Cutting what the coding agents cost</h3>
+        <p>A pilot on September 17 ran three lanes of very different size: a documentation edit, a mapping fix, and two new gates. Each cost 11 to 14 million tokens. What an agent spends is set by how much of the codebase it has to read and verify before it can act. So I re-planned the work by lane and staffed each lane by risk.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Lane</th><th>Staffing</th><th>What goes in it</th><th>Per lane</th></tr></thead>
+            <tbody>
+              <tr><td>Numbers</td><td>Frontier-model builder and reviewer, mid-tier fixer</td><td>Anything that can change a figure a client sees</td><td class="num">$15</td></tr>
+              <tr><td>Numbers, high risk</td><td>Adds a second frontier-model reviewer</td><td>Rewrites stored records or touches customer isolation</td><td class="num">$18</td></tr>
+              <tr><td>Surface</td><td>Mid-tier builder; CI and gates review it</td><td>Copy, layout, admin screens, docs</td><td class="num">$5</td></tr>
+              <tr><td>Probe</td><td>Small model, read-only</td><td>Measurement, production checks, closing tickets with evidence</td><td class="num">$1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tiles">
+          <div class="tile"><span class="k">Cost per work item</span><span class="v">$49 &rarr; $15</span><span class="d">The first sprint ran $1,450 for 31 tickets. Re-planned sprints price out at about $15 an item.</span></div>
+          <div class="tile"><span class="k">Open items, bundled</span><span class="v">137 &rarr; 66</span><span class="d">Bundled into lanes by shared code. The estimate fell from about $3,600 to $2,000, with roughly 70 fewer pull requests and CI runs.</span></div>
+          <div class="tile"><span class="k">Pilot wall clock</span><span class="v">7 to 17 min</span><span class="d">Per lane, against estimates of 15 minutes to an hour and a half.</span></div>
+        </div>
+        <p>The first sprint also set the operating rules. It ran 13 hours against 3.5 planned: the account's usage limit paused every agent for about six hours, and merging 14 lanes took two integration trains. Now I check the remaining allowance before launch, cap the run at eight lanes, merge each on green, and stop to re-plan past 1.5 times the estimate.</p>
+        <ul class="list">
+          <li>Tier lanes by the files they touch. Tickets that share code share a lane.</li>
+          <li>Keep briefs under a page, trim test output, and hand off past about 150K tokens of context.</li>
+          <li>Next lever, about 45% of lane cost: cut what an agent reads before it acts, with a small-model scout that hands the builder the exact files.</li>
+        </ul>
+        <p class="note">Dollar figures are API-equivalent at list prices.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="wilson">
+      <div class="panel-head">
+        <div><div class="kicker">Personal project</div><h2>Wilson</h2></div>
+        <span class="pill hold">ON HOLD</span>
+      </div>
+      <div class="panel-body">
+        <p class="thesis">An AI trading system where 10+ strategy agents feed a risk-limited allocator that sizes trades and routes approved orders to brokers, with every decision logged and explained.</p>
+        <dl class="spec">
+          <div><dt>Period</dt><dd>2025 to April 2026</dd></div>
+          <div><dt>My role</dt><dd>Spec author, architect, design reviewer</dd></div>
+          <div><dt>Stack</dt><dd>Python, FastAPI, Postgres, web front end, broker adapters</dd></div>
+          <div><dt>Status</dt><dd>Core system built; on hold since April 2026</dd></div>
+        </dl>
+
+        <h3>How a trade moves through it</h3>
+        <div class="flow" role="list">
+          <div class="stage" role="listitem"><b>Strategies</b><span>Momentum, mean reversion, trend, hedge, plus drawdown and exposure guards</span></div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="stage" role="listitem"><b>Allocator</b><span>Resolves conflicts, checks sleeve capacity, cash buffer, position limits</span></div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="stage" role="listitem"><b>Play</b><span>Sized proposal with stop, target, confidence, and an explanation record</span></div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="stage you" role="listitem"><b>My approval</b><span>Nothing reaches a broker without it</span></div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="stage" role="listitem"><b>Broker adapter</b><span>Orders and fills, with a kill switch</span></div>
+        </div>
+        <p>The rule I set from the start: no black box. Every signal, allocator decision, and risk check is logged and viewable. A chat strategist sits on top with ten read-only tools (positions, exposure, pending plays, the explanation behind any play) and a brief to push back and never hype.</p>
+
+        <h3>Risk limits written into the spec</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Limit</th><th>Setting</th></tr></thead>
+            <tbody>
+              <tr><td>Cash buffer</td><td class="num">20 to 30% of the portfolio</td></tr>
+              <tr><td>Largest single position</td><td class="num">25%</td></tr>
+              <tr><td>Largest alpha position</td><td class="num">10%</td></tr>
+              <tr><td>Risk per trade</td><td class="num">3%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>How I used AI to build it</h3>
+        <ol class="list">
+          <li>Wrote versioned specs (v9, v11, v12) with database schemas, API contracts, acceptance tests, explicit non-goals, and an execution order.</li>
+          <li>Had an AI reviewer critique each spec, then pushed back wherever the critique cut something I cared about.</li>
+          <li>Built with coding agents against a six-sprint plan: foundation, agents and allocator, playbook and mandate, chat, UI, polish.</li>
+          <li>Brought screenshots of the running app back into a design review, since the reviewer could not see my local build.</li>
+          <li>Got before and after mockups plus a file of exact directions for the coding agent, quick wins first.</li>
+          <li>When small fixes piled up into clutter, called for a redesign from first principles.</li>
+        </ol>
+
+        <h3>Calls I made that the AI would not have</h3>
+        <ul class="list">
+          <li>Caught that the v11 spec had dropped the chat strategist and mandate management from v9, and put them back.</li>
+          <li>Chose one coherent v12 release over splitting the scope into point releases.</li>
+          <li>Rejected a tabbed layout that hid detail and required a responsive grid that kept all of it.</li>
+          <li>Raised the minimum font size to 11 to 12 pixels after the AI defaulted to 8 or 9.</li>
+          <li>Required the agents screen to scale past 20 strategies, where the first draft showed 4 cards.</li>
+          <li>Asked for decision-first screens: fill probability, distance to market, and links to the originating play shown inline.</li>
+        </ul>
+
+        <h3>What it taught me</h3>
+        <div class="findings">
+          <div class="finding"><div class="tag">Context</div><p><b>An analysis session ran without my mandate in front of it.</b> The spec now lives in the project, so every session starts with the full context.</p></div>
+          <div class="finding"><div class="tag">Drift</div><p><b>The front end moved to the web while the spec still described a terminal UI.</b> The spec now changes in the same pass as the build.</p></div>
+          <div class="finding"><div class="tag">Defaults</div><p><b>The AI kept simplifying: tabs that hid detail, 8-pixel fonts, 4-card prototypes.</b> I set the bar for density, scale, and readability up front.</p></div>
+          <div class="finding"><div class="tag">Handoff</div><p><b>Design feedback in prose got lost on the way to the build.</b> Mockups plus exact code directions became the standard handoff to the coding agent.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="bud">
+      <div class="panel-head">
+        <div><div class="kicker">Personal project</div><h2>Bud</h2></div>
+        <span class="pill">IN USE</span>
+      </div>
+      <div class="panel-body">
+        <p class="thesis">A personal money copilot with two equal halves: a dashboard that answers "how am I doing?" in under five seconds, and an AI chat that knows the full financial picture and makes specific recommendations.</p>
+        <dl class="spec">
+          <div><dt>Period</dt><dd>April 2026 to present</dd></div>
+          <div><dt>My role</dt><dd>Product owner, reviewer, operator</dd></div>
+          <div><dt>Stack</dt><dd>Next.js, React, SQLite with Drizzle, an LLM API, bank sync, a secrets manager</dd></div>
+          <div><dt>Build record</dt><dd>69 commits, 34 co-authored by coding agents</dd></div>
+        </dl>
+
+        <h3>What I shipped</h3>
+        <p>Bank sync over mutual TLS, transactions, budgets, payoff planning, credit and tax tracking, goals, a cash-flow schedule, forecast and subscription audit reports, and a command-line client. The in-app chat gets the live financial state in its context every turn, and has tools for a morning brief, a weekly review, and suggested savings cuts.</p>
+
+        <h3>Three ways I used AI</h3>
+        <ul class="list">
+          <li><b>Engineer.</b> Coding agents wrote most of the app through feature branches and pull requests. I reviewed and merged. Four milestones shipped in about a week.</li>
+          <li><b>Product reviewer.</b> I had an AI reviewer audit the half-built app the way a product manager would. It judged the app about 75% built and found the chat was acting as a bottleneck because there were no entry forms. My rule: make the call and explain why, and only ask me when my answer changes the outcome.</li>
+          <li><b>Analyst.</b> AI analyst sessions read Bud's database directly with Python to build cash forecasts, scenario plans, and variance analysis against plan. A scheduled review runs twice a month, and persistent project memory lets each session pick up where the last one stopped.</li>
+        </ul>
+
+        <h3>What reconciliation taught me</h3>
+        <p>An AI-run reconciliation checked Bud against the banks' own records. It surfaced three ways a synced finance app can look right and drift, and each one set a rule I now build to.</p>
+        <div class="findings">
+          <div class="finding"><div class="tag">Dates</div><p><b>Balance dates.</b> The feed stamped balances with its own sync time, so a stale balance read as current. Rule: carry the source's own timestamp all the way through.</p></div>
+          <div class="finding"><div class="tag">Pending</div><p><b>Pending activity.</b> Cash on hand read high with pending transactions left out. Rule: show what is in flight next to what has settled.</p></div>
+          <div class="finding"><div class="tag">Gaps</div><p><b>Missing records.</b> Some payments never arrived from the feed. Rule: count records against the source so gaps show up on their own.</p></div>
+        </div>
+        <p>None of these threw an error. They only showed up because the app was checked against the source of truth, and that check is now part of how I run anything that reports a number.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="context">
+      <div class="panel-head">
+        <div><div class="kicker">Personal tooling</div><h2>Work context server</h2></div>
+        <span class="pill">DAILY USE</span>
+      </div>
+      <div class="panel-body">
+        <p class="thesis">A local tool that records my working day, attributes it to the right project, and serves it to AI assistants through an MCP server I built, so they start from what actually happened.</p>
+        <dl class="spec">
+          <div><dt>Period</dt><dd>2026, in daily use</dd></div>
+          <div><dt>My role</dt><dd>Designer and builder</dd></div>
+          <div><dt>Built with</dt><dd>Agentic coding, Model Context Protocol</dd></div>
+          <div><dt>Runs</dt><dd>Locally on my Mac</dd></div>
+        </dl>
+        <h3>What it does</h3>
+        <ul class="list">
+          <li>Captures call transcripts and on-screen text, with full-text search across both.</li>
+          <li>Attributes time to each project using a project dictionary: names, match strings, attendee email domains, and a list of ways the transcriber mishears a name.</li>
+          <li>Gives AI assistants tools to pull a day or a date range, list meetings, read a transcript, list tasks, and search activity history.</li>
+          <li>Compresses older text into archives past a retention window, still searchable on request.</li>
+        </ul>
+        <h3>What it's for</h3>
+        <p>The work I do produces a lot of context: calls, decisions, follow-ups across many projects running at once. The server lets me ask an AI assistant what was said on a call, where my week went, or what is open on a project, and get an answer from the record.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="method">
+      <div class="panel-head">
+        <div><div class="kicker">Across all four</div><h2>How I work with AI</h2></div>
+      </div>
+      <div class="panel-body">
+        <div class="principles">
+          <div><b>Spec first</b><p>Schemas, contracts, acceptance tests, and non-goals before any code. The coding agent builds to what I wrote down.</p></div>
+          <div><b>Set the bar</b><p>AI drifts toward simple. I decide density, scale, and readability, and I reject drafts that fall short.</p></div>
+          <div><b>Check against the source</b><p>Bank records for Bud, source systems for every implementation cutover I run at work. A plausible number is the dangerous one.</p></div>
+          <div><b>Keep context alive</b><p>Specs attached to projects, persistent memory, and the work context server, so each session starts from the real state of the work.</p></div>
+          <div><b>Redesign when patches pile up</b><p>Five sensible fixes can make a screen that has every piece and still does not flow. Start over when that happens.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>AJ Jones &middot; ajjonez@icloud.com &middot; linkedin.com/in/ajjonez &middot; Updated October 2026</footer>
+
+</body>
+</html>
